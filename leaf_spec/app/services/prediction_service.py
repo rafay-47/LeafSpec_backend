@@ -4,21 +4,50 @@ from app import mb
 
 class PredictionService:
     SPECIES = [
-        'Aloe Vera', 'Alstonia Scholaris', 'Apple', 'Arjun', 'Blueberry',
-        'Buxus sempervirens L(200)', 'Cherry', 'Corn', 'Cotinus coggygria Scop(200)',
-        'Crataegus monogyna Jacq(200)', 'Fraxinus angustifolia Vahl(200)', 'Grape',
-        'Guava', 'Hedera helix L(200)', 'Jamun', 'Jatropha', 'Kale',
-        'Laurus nobilis L(200)', 'Lemon', 'Mango', 'Orange', 'Paddy Rice',
-        'Peach', 'Pepper Bell', 'Phillyrea angustifolia L(200)',
-        'Pistacia lentiscus L(200)', 'Pittosporum tobira Thunb WTAiton(200)',
-        'Pomegranate', 'Pongamia Pinnata', 'Populus alba L(200)',
-        'Populus nigra L(200)', 'Potato', 'Quercus ilex L(200)', 'Raspberry',
-        'Soybean', 'Spinach', 'Strawberry', 'Tobacco', 'Tomato'
+        "Acer negundo L(196)",
+        "Aloe Vera",
+        "Apple",
+        "Arjun",
+        "Blueberry",
+        "Buxus sempervirens L(200)",
+        "Cherry",
+        "Corn",
+        "Cotinus coggygria Scop(200)",
+        "Crataegus monogyna Jacq(200)",
+        "Fraxinus angustifolia Vahl(200)",
+        "Grape",
+        "Guava",
+        "Hedera helix L(200)",
+        "Jamun",
+        "Jatropha",
+        "Kale",
+        "Laurus nobilis L(200)",
+        "Lemon",
+        "Mango",
+        "Orange",
+        "Paddy Rice",
+        "Peach",
+        "Pepper Bell",
+        "Phillyrea angustifolia L(200)",
+        "Pistacia lentiscus L(200)",
+        "Pittosporum tobira Thunb WTAiton(200)",
+        "Pomegranate",
+        "Pongamia Pinnata",
+        "Populus alba L(200)",
+        "Populus nigra L(200)",
+        "Potato",
+        "Quercus ilex L(200)",
+        "Raspberry",
+        "Ruscus aculeatus L(200)",
+        "Soybean",
+        "Spinach",
+        "Strawberry",
+        "Tomato"
     ]
 
     @staticmethod
     def preprocess_image(image):
-        image = image.resize((224, 224))
+        image = image.resize((227, 227))
         image = np.array(image)
         image = image / 255.0
         image = np.expand_dims(image, axis=0)
@@ -30,11 +59,12 @@ class PredictionService:
         prediction_data = mb.get_inference(
             region="us-east-1.aws",
             workspace="nu-edu",
-            deployment="predict_species",
+            deployment="predict_species_using_AlexNet",
             data={"image": preprocessed_image.tolist()}
         )
         
         prediction = prediction_data.get('data', {}).get('prediction', [])
+        print(prediction)
         predicted_species = PredictionService.SPECIES[np.argmax(prediction)]
         confidence = prediction[0][np.argmax(prediction)]
         

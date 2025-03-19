@@ -26,12 +26,19 @@ def create_app(config_class=Config):
     os.environ['MB_API_KEY'] = app.config['MB_API_KEY']
     mb = modelbit.login(region=app.config['MB_REGION'])
     
+    os.environ['GOOGLE_CLIENT_ID'] = app.config['GOOGLE_CLIENT_ID']
+
     # Register blueprints
     from app.routes.auth import auth_bp
     from app.routes.prediction import prediction_bp
+    from app.routes.species_route import species_bp
+    from app.routes.feedback import feedback_bp
+
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(prediction_bp)
+    app.register_blueprint(species_bp)
+    app.register_blueprint(feedback_bp)
     
     @app.route('/')
     def home():
